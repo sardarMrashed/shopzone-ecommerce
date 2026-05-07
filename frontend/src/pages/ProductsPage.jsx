@@ -14,9 +14,9 @@ const ProductsPage = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true)
-        const { data } = await axios.get(`http://localhost:5000/api/products?search=${search}&category=${category}`)
-        setProducts(data)
-        setLoading(false)
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/products?search=${search}&category=${category}`)
+        setProducts(data) 
+      setLoading(false)
       } catch (err) {
         setError('Failed to load products')
         setLoading(false)

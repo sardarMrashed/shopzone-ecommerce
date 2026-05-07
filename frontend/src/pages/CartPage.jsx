@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import axios from 'axios'
+import API from '../api'
 import { useCart } from '../context/CartContext'
 import { Link } from 'react-router-dom'
 
@@ -18,17 +18,17 @@ const CartPage = () => {
     try {
       setLoading(true)
       const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-      await axios.post(
-        'http://localhost:5000/api/orders',
-        {
-          orderItems: cartItems,
-          shippingAddress: { address },
-          totalPrice
-        },
-        {
-          headers: { Authorization: `Bearer ${userInfo?.token}` }
-        }
-      )
+   await API.post(
+  '/api/orders',
+  {
+    orderItems: cartItems,
+    shippingAddress: { address },
+    totalPrice
+  },
+  {
+    headers: { Authorization: `Bearer ${userInfo?.token}` }
+  }
+)
       setSuccess(true)
       setLoading(false)
     } catch (err) {
