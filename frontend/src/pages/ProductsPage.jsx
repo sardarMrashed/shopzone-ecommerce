@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import API from '../api'
 import { useCart } from '../context/CartContext'
 
 const ProductsPage = () => {
@@ -8,22 +8,38 @@ const ProductsPage = () => {
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('')
+  const [retryKey, setRetryKey] = useState(0)
   const { addToCart } = useCart()
 
   useEffect(() => {
+    let active = true
+
     const fetchProducts = async () => {
+      setLoading(true)
+      setError('')
+
       try {
-        setLoading(true)
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/products?search=${search}&category=${category}`)
-        setProducts(data) 
-      setLoading(false)
+        const { data } = await API.get('/api/products', {
+          params: { search, category }
+        })
+        if (!Array.isArray(data)) {
+          throw new Error('Product API returned an invalid response')
+        }
+        if (active) setProducts(data)
       } catch (err) {
-        setError('Failed to load products')
-        setLoading(false)
+        console.error('Failed to fetch products:', err)
+        if (active) {
+          setProducts([])
+          setError('Unable to load products. Please try again. If the problem continues, the shopping service may be unavailable.')
+        }
+      } finally {
+        if (active) setLoading(false)
       }
     }
+
     fetchProducts()
-  }, [search, category])
+    return () => { active = false }
+  }, [search, category, retryKey])
 
   if (loading) return (
     <div className='flex justify-center items-center h-screen'>
@@ -32,8 +48,9 @@ const ProductsPage = () => {
   )
 
   if (error) return (
-    <div className='flex justify-center items-center h-screen'>
-      <div className='text-2xl font-bold text-red-500'>{error}</div>
+    <div className='flex flex-col justify-center items-center min-h-[60vh] gap-4 px-4 text-center'>
+      <p role='alert' className='text-xl font-bold text-red-600'>{error}</p>
+      <button type='button' onClick={() => setRetryKey(key => key + 1)} className='bg-gray-800 text-white px-5 py-3 rounded-lg hover:bg-gray-700'>Try again</button>
     </div>
   )
 
@@ -56,9 +73,9 @@ const ProductsPage = () => {
           className='border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gray-800'
         >
           <option value=''>All Categories</option>
-          <option value='electronics'>Electronics</option>
-          <option value='shoes'>Shoes</option>
-          <option value='clothing'>Clothing</option>
+          <option value='Electronics'>Electronics</option>
+          <option value='Shoes'>Shoes</option>
+          <option value='Clothing'>Clothing</option>
         </select>
       </div>
 
