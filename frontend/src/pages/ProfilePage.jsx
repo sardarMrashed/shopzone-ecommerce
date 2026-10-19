@@ -40,8 +40,8 @@ function ProfilePage() {
           Authorization: `Bearer ${userInfo.token}`
         }
       }
-      const { data } = await axios.put(
-        'http://localhost:5000/api/auth/profile',
+      const { data } = await API.put(
+        '/api/auth/profile',
         { name, email, password },
         config
       )
