@@ -12,7 +12,7 @@ const LoginPage = () => {
     e.preventDefault()
     try {
       setLoading(true)
-      const { data } = await axios.post('http://localhost:5000/api/auth/login', {
+      const { data } = await API.post('/api/auth/login', {
         email,
         password
       })
