@@ -129,3 +129,16 @@ shopzone-ecommerce/
 ---
 
 ⭐ If you like this project, give it a star on GitHub!
+
+
+## 🔒 Environment configuration
+
+Use `backend/.env.example` and `frontend/.env.example` as templates for **local, untracked** `.env` files. Store MongoDB credentials and the JWT signing secret in server-side environment settings on your hosting provider; never expose them through `VITE_*` variables or Git commits.
+
+For a deployed backend, configure `MONGO_URI` and `JWT_SECRET` on the server. The frontend may use the non-secret `VITE_API_URL` setting to point to that backend.
+
+## Connect
+
+- [Portfolio](https://sardar-portfolio.vercel.app/)
+- [LinkedIn](https://www.linkedin.com/in/sardar-mohammed-rashid/)
+- [GitHub profile](https://github.com/sardarMrashed)
